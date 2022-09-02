@@ -4,7 +4,7 @@ This is a collection of example scenarios to help test your Sysdig Secure
 
 Sysdig provides a general-purpose example exploit called Security Playground https://github.com/sysdiglabs/security-playground that is a Python app which just reads and writes whatever paths you GET/POST against it. You can also ask it to execute any command.
 
-To understand a bit more about how that works visit the git repo link above. To deploy it to your environment do a `kubectl apply -f security-playground`.
+To understand a bit more about how that works visit the git repo link above. To deploy it to your environment do a `kubectl apply -f security-playground.yaml`.
 
 The idea with this is that imagine there is another Apache Struts or Log4j critical vulnerability that there is not yet a known CVE for so your vulnerability scans don't pick it up. This shows that Sysdig can help you catch the anomolous behaviors of that being expoited even as a zero day.
 
