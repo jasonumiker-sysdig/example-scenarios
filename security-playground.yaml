@@ -3,23 +3,6 @@ kind: Namespace
 metadata:
   name: security-playground
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: security-playground
-  namespace: security-playground
-  labels:
-    app.kubernetes.io/name: security-playground
-spec:
-  type: NodePort
-  ports:
-    - port: 8080
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: security-playground
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,9 +20,10 @@ spec:
       labels:
         app.kubernetes.io/name: security-playground
     spec:
+      hostPID: true
       containers:
         - name: security-playground
-          image: docker.io/sysdiglabs/security-playground:latest
+          image: jasonumiker/security-playground:latest
           ports:
             - name: http
               containerPort: 8080
@@ -52,3 +36,23 @@ spec:
             httpGet:
               path: /health
               port: http
+          securityContext:
+            privileged: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: security-playground
+  namespace: security-playground
+  labels:
+    app.kubernetes.io/name: security-playground
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+      nodePort: 30284
+  selector:
+    app.kubernetes.io/name: security-playground
