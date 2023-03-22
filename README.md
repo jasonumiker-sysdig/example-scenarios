@@ -19,3 +19,5 @@ NOTE: This is deployed with a service of type NodePort - if you'd prefer it to b
 Sysdig provides a crypto mining example at https://github.com/sysdiglabs/policy-editor-attack that we run as #5 in example-curls.sh.
 
 NOTE: This example will deliberatly fail to actually mine - we are just triggering the rules looking for mining tools like cgminer
+
+NOTE: This example currently only works with Intel/AMD (not ARM/M1/M2)
