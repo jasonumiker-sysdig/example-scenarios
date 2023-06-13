@@ -8,7 +8,7 @@ To understand a bit more about how that works, visit the git repo link above or 
 
 The idea with this is that imagine there is another Apache Struts or Log4j critical vulnerability that there is not yet a known CVE for so your vulnerability scans don't pick it up. This shows that Sysdig can help you catch the anomolous behaviors of that being expoited even as a zero day.
 
-You can see various examples of how this works in the example-curls.sh file. Note that this tries to get the Node IP from kubectl and assumes the port (30000 for the security-playground and 30001 for the security-playground-restricted).
+You can see various examples of how this works in the [example-curls.sh](https://github.com/jasonumiker-sysdig/example-scenarios/blob/main/example-curls.sh) file. Note that this tries to get the Node IP from kubectl, so that has to be working, and assumes the port (30000 for the security-playground and 30001 for the security-playground-restricted) is reachable from the machine you are running it on.
 
 NOTE: This is deployed with a service of type NodePort - if you'd prefer it to be a load balancer then modify that manifest to reconfigure the Service as well as the bash script addresses how you'd prefer. Just be careful as this is a very insecure app (by design) - don't put it on the Internet etc.
 
