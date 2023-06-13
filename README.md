@@ -46,7 +46,7 @@ First we attempt to write a file in a sensitive path (/bin)- /bin/hello - with t
 
 Then we try to `chmod +x` our new file. Then we try to run it.
 
-This triggers `Drift Detection` as we are doing a `chmod +x` on a new file at runtime.
+This triggers our Drift Detection as this executable file was not part of the original image and has been added at runtime - which is bad practice and a good way to detect attackers adding new tools to execute inside your container as part of an attack.
 
 These will be blocked by our python app not being run as the root user, and therefore not having access to this path, in sysdig-playground-restricted.
 
