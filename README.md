@@ -4,7 +4,7 @@ This is a collection of example scenarios to help test your Sysdig Secure
 
 Sysdig provides a general-purpose example exploit called Security Playground https://github.com/sysdiglabs/security-playground that is a Python app which just reads and writes whatever paths you GET/POST against it. You can also ask it to execute any command.
 
-To understand a bit more about how that works visit the git repo link above. To deploy it to your environment do a `kubectl apply -f security-playground.yaml`. You should also run `kubectl apply -f postgres-sakila.yaml` in order for the database exploit in `example-curls.sh` to work.
+To understand a bit more about how that works visit the git repo link above. To deploy it to your environment do a `kubectl apply -f security-playground.yaml`. You should also run `kubectl apply -f postgres-sakila.yaml` in order for the database exploit in [example-curls.sh](https://github.com/jasonumiker-sysdig/example-scenarios/blob/main/example-curls.sh) to work.
 
 The idea with this is that imagine there is another Apache Struts or Log4j critical vulnerability that there is not yet a known CVE for so your vulnerability scans don't pick it up. This shows that Sysdig can help you catch the anomolous behaviors of that being expoited even as a zero day.
 
@@ -14,7 +14,7 @@ NOTE: This is deployed with a service of type NodePort - if you'd prefer it to b
 
 ## security-playground vs. security-playground-restricted
 
-The [security-playground]() example has three key security issues:
+The [security-playground.yaml](https://github.com/jasonumiker-sysdig/example-scenarios/blob/main/security-playground.yaml) example has three key security issues:
 1. It runs as root
 1. It is running with `hostPID: true`
 1. It is running in a priviledged security context
@@ -25,8 +25,8 @@ We use two tools to break out:
 * `nsenter` which allows you to switch namespaces (if allowed by those insecure parameters in the PodSpec to do so)
 * `crictl` which is used to control the local container runtime (bypassing Kubernetes) (if allowed to the container socket on the host by these insecure parameters in the podspec and nsenter).
 
-The [security-playground-restricted]() example fixes all these vulnerabilities in the following ways:
-1. We build a container image that runs as a non-root user (this requried changes to the Dockerfile as you'll see in [Dockerfile-unprivileged]() vs [Dockerfile]().
+The [security-playground-restricted.yaml](https://github.com/jasonumiker-sysdig/example-scenarios/blob/main/security-playground-restricted.yaml) example fixes all these vulnerabilities in the following ways:
+1. We build a container image that runs as a non-root user (this requried changes to the Dockerfile as you'll see in [Dockerfile-unprivileged](https://github.com/jasonumiker-sysdig/example-scenarios/blob/main/Dockerfile-unprivileged) vs [Dockerfile](https://github.com/jasonumiker-sysdig/example-scenarios/blob/main/Dockerfile).
 1. The PodSpec not only doesn't have hostPID and a privileged securityContext but it adds in the new Pod Security Admission (PSA) restricted mode for the namespace which ensures that they can't be added to the PodSpec to restore them.
 1. The restricted PSA also keeps us from trying to specify/restore root permissons (the original container could only run as Root but this one we could specify in the PodSpec to run it as root and it would still work).
 
