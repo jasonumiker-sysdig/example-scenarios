@@ -34,14 +34,13 @@ The [security-playground-restricted.yaml](https://github.com/jasonumiker-sysdig/
 
 ||security-playground|security-playground-restricted|security-playground + container drift enforcement| security-playground-restricted + container drift enforcement|
 |-|-|-|-|-|
-|1|allowed|blocked (by not running as root)|allowed|blocked
-|2|allowed|blocked (by not running as root)|blocked|blocked
-|3|allowed|blocked (by not running as root)|blocked|blocked
-|4|allowed|allowed|blocked|blocked
-|5|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked
-|6|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked
-|7|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked
-
+|1|allowed|blocked (by not running as root)|allowed|blocked (by not running as root)
+|2|allowed|blocked (by not running as root)|blocked|blocked (by not running as root)
+|3|allowed|blocked (by not running as root)|blocked|blocked (by not running as root)
+|4|allowed|allowed|blocked|blocked (by Container Drift)
+|5|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
+|6|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
+|7|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
 
 Run `cat example-curls.sh` to see what we are about to run. To run these against security-playground-restricted instead run `example-curls-restricted.sh`.
 
