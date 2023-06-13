@@ -19,7 +19,7 @@ The [security-playground.yaml](https://github.com/jasonumiker-sysdig/example-sce
 1. It is running with `hostPID: true`
 1. It is running in a priviledged security context
 
-These vulnerabilities when done together allow you to escape out of the container isolation boundaries and be root on the host. This allows you not just full control over the host but also over/within the other containers.
+When these (mis)configurations are done together, they allow you to escape out of the container isolation boundaries and be root on the host. This allows you not just full control over the host but also over/within the other containers.
 
 We use two tools to break out:
 * `nsenter` which allows you to switch namespaces (if allowed by those insecure parameters in the PodSpec to do so)
