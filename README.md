@@ -37,10 +37,10 @@ The [security-playground-restricted.yaml](https://github.com/jasonumiker-sysdig/
 |1|allowed|blocked (by not running as root)|allowed|blocked (by not running as root)
 |2|allowed|blocked (by not running as root)|blocked|blocked (by not running as root)
 |3|allowed|blocked (by not running as root)|blocked|blocked (by not running as root)
-|4|allowed|allowed|blocked|blocked (by Container Drift)
+|4|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
 |5|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
 |6|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
-|7|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
+|7|allowed|allowed|blocked|blocked (by Container Drift)
 
 Run `cat example-curls.sh` to see what we are about to run. To run these against security-playground-restricted instead run `example-curls-restricted.sh`.
 
@@ -76,23 +76,7 @@ This triggers the:
 #### security-playground-restricted
 This will be blocked by our python app not being run as the root user, and therefore not having access to install packages with apt, in security-playground-restricted.
 
-### 4. Crypto Mining Example
-Here we are downloading popular crytpo miner cgminer and running it.
-
-This will fire several Rules including:
-* `Mailicious filenames written` and `Malicilous binary detected` from the `Sysdig Runtime Threat Intelligence` Managed Policy
-* `Drift Detection` from `Container Drift`
-* `Detect outbound connections to common miner pool ports` from the `Sysdig Runtime Threat Intelligence` Managed Policy
-* `Cryto Mining Detection` from `Machine Learning`
-
-NOTE: If you want to actually mine (needed to trigger a couple of the rules above) remove the --dry-run from the command in the curl
-
-NOTE: This example currently only works with Intel/AMD (not ARM including Apple M1/M2)
-
-#### security-playground-restricted
-This is the only example that still works with sysdig-playground-restricted as you don't need to be root to download and run the crypto miner. It can, however, be blocked by a Sysdig Container Drift Policy set to enforce/prevent the drift.
-
-### 5. Break out of our container and install crictl on the host/Node
+### 4. Break out of our container and install crictl on the host/Node
 
 As discussed above, given the parameters we have specified (run as root, hostPID, privileged) we are allowed to break out of our container/Linux namespace if we ask. You can do that with the tool `nsenter`. We use this to download and install `crictl`, the tool to manage the container runtime directly, on the Node outside the container. We'll leverage this command behind there in the following examples.
 
@@ -103,7 +87,7 @@ This will fire two Rules:
 #### security-playground-restricted
 This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either in security-playground-restricted. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
 
-### 6. Break out of our container and interact with other containers via crictl
+### 5. Break out of our container and interact with other containers via crictl
 
 The `crictl` command is similar to the Docker CLI and allows you to directly manage the local container runtime (containerd) on the Node - bypassing Kubernetes which normally is how you'd manage it.
 
@@ -114,7 +98,7 @@ This will fire several the `The docker client is executed in a container` rule i
 #### security-playground-restricted
 This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either in security-playground-restricted. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
 
-### 7. Run a command (a psql query) in another container on the same Node (that runs a PostgreSQL DB)
+### 6. Run a command (a psql query) in another container on the same Node (that runs a PostgreSQL DB)
 
 Finally let's exfiltrate some data by running a query within `psql` inside another container on the same host. Even if the database wasn't running within the container (maybe it is an AWS RDS instead) the application Pod needs to have the connection string/secret within it decrypted at runtime in order for *it* to connect. Which means if we can install/run the database client within that other container/Pod then this will still work.
 
@@ -122,3 +106,19 @@ This will fire the  the `The docker client is executed in a container` rule in t
 
 #### security-playground-restricted
 This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either in security-playground-restricted. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
+
+### 7. Crypto Mining Example
+Here we are downloading popular crytpo miner cgminer and running it.
+
+This will fire several Rules including:
+* `Mailicious filenames written` and `Malicilous binary detected` from the `Sysdig Runtime Threat Intelligence` Managed Policy
+* `Drift Detection` from `Container Drift`
+* `Detect outbound connections to common miner pool ports` from the `Sysdig Runtime Threat Intelligence` Managed Policy
+* `Cryto Mining Detection` from `Machine Learning`
+
+NOTE: If you want to actually mine (needed to trigger a couple of the rules above) remove the --dry-run from the command in the curl. Also note that without the --dry-run that it will keep running until you kill the Pod!
+
+NOTE: This example currently only works with Intel/AMD (not ARM including Apple M1/M2)
+
+#### security-playground-restricted
+This is the only example that still works with sysdig-playground-restricted as you don't need to be root to download and run the crypto miner. It can, however, be blocked by a Sysdig Container Drift Policy set to enforce/prevent the drift.
