@@ -3,6 +3,30 @@ kind: Namespace
 metadata:
   name: security-playground
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: default
+  namespace: security-playground
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default
+  namespace: security-playground
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: security-playground
+roleRef:
+  kind: Role
+  name: default
+  apiGroup: rbac.authorization.k8s.io
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
