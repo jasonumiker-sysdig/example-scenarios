@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: security-playground-restricted-nodrift
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: security-playground-restricted-nodrift
+  namespace: security-playground-restricted-nodrift
+  labels:
+    app.kubernetes.io/name: security-playground-restricted-nodrift
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: security-playground-restricted-nodrift
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: security-playground-restricted-nodrift
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault        
+      containers:
+        - name: security-playground-unprivileged
+          image: public.ecr.aws/m9h2b5e7/security-playground-unprivileged:270723
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: security-playground-restricted-nodrift
+  namespace: security-playground-restricted-nodrift
+  labels:
+    app.kubernetes.io/name: security-playground-restricted-nodrift
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+      nodePort: 30002
+  selector:
+    app.kubernetes.io/name: security-playground-restricted-nodrift
