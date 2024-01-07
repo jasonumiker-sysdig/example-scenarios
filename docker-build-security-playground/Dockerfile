@@ -1,4 +1,4 @@
-FROM python:3.11.4-bullseye
+FROM python:3.12.1-bookworm
 
 RUN pip install pipenv
 
