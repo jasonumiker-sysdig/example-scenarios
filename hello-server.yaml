@@ -39,7 +39,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - image: public.ecr.aws/m9h2b5e7/hello-app:270723
+      - image: public.ecr.aws/m9h2b5e7/hello-app:080124
         name: hello-server
         ports:
         - containerPort: 8080
