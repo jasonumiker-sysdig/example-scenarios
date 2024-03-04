@@ -105,4 +105,6 @@ Ensure your kubectl is working for the intended cluster and you are in the examp
 ## Do the workshop!
 The scripts that you would expect to be on the Jumpbox are all in the scripts folder.
 
-Everything should now work the same as if it was a lab environment provided by Sysdig.
+Assuming you configured everything as above, it should now work the same as if it was in the lab environment provided by Sysdig during the workshop.
+
+NOTE: The scripts expect to be able to hit a NodePort on the cluster's Node(s) and so likely need to be run from a machine on the same VPC or connected private network in order for them to work. Worst case you can spin up an EC2 instance in that same VPC to run them on (like we do in the workshop).
