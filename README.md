@@ -9,7 +9,46 @@ I provide them here so that you can run through that workshop on your own cluste
 You need to have:
 * An AWS EKS Cluster
 * A machine that is able to run kubectl commands against it (i.e. you've already run the `aws eks update-kubeconfig` with the right AWS IAM available to do so etc.)
-* A Sysdig Secure subscription
+* A Sysdig Secure subscription with both the EKS Cluster and the AWS Account connected.
+
+### Connecting the EKS Cluster
+
+This is the Sysdig Helm Chart values file we use in the workshop. I haven't moved to the cluster scanner yet because the workshop is a single-node cluster so it doesn't really matter/help there.
+```
+global:
+  sysdig: 
+    accessKey: XXX
+    region: au1
+    secureAPIToken: YYY
+  kspm:
+    deploy: true
+  clusterConfig:
+    name: ZZZ
+nodeAnalyzer:
+  secure:
+    vulnerabilityManagement:
+      newEngineOnly: true
+  nodeAnalyzer:
+    benchmarkRunner:
+      deploy: false
+    runtimeScanner:
+      settings:
+        eveEnabled: true
+    hostScanner:
+      scanOnStart: true
+admissionController:
+  enabled: true
+  scanner:
+    enabled: false
+  webhook:
+    autoscaling:
+      minReplicas: 1
+```
+
+### Connecting the AWS Account
+We have connected the workshop AWS account with agentless CSPM and CDR - and assume that you'll have these enabled in your account as well:
+![alt text](agentless-aws.png)
+
 
 ## Configuring Sysdig Secure's Runtime Policies
 
