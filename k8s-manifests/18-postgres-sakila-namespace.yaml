@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: postgres-sakila
+  labels:
+    app.kubernetes.io/name: postgres-sakila
+    app: postgres-sakila

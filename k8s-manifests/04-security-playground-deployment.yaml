@@ -1,32 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: security-playground
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: default
-  namespace: security-playground
-rules:
-- apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["*"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: default
-  namespace: security-playground
-subjects:
-- kind: ServiceAccount
-  name: default
-  namespace: security-playground
-roleRef:
-  kind: Role
-  name: default
-  apiGroup: rbac.authorization.k8s.io
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -69,21 +40,3 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: security-playground
-  namespace: security-playground
-  labels:
-    app.kubernetes.io/name: security-playground
-spec:
-  type: NodePort
-  ports:
-    - port: 8080
-      targetPort: http
-      protocol: TCP
-      name: http
-      nodePort: 30000
-  selector:
-    app.kubernetes.io/name: security-playground

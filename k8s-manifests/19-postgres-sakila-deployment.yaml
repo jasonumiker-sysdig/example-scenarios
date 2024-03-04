@@ -1,24 +1,19 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: postgres-sakila
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-sakila-deployment
+  name: postgres-sakila
   labels:
-    app: postgres-sakila
+    app.kubernetes.io/name: postgres-sakila
   namespace: postgres-sakila
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-sakila
+      app.kubernetes.io/name: postgres-sakila
   template:
     metadata:
       labels:
-        app: postgres-sakila
+        app.kubernetes.io/name: postgres-sakila
     spec:
       containers:
       - name: postgres-sakila
@@ -28,3 +23,10 @@ spec:
         env:
         - name: POSTGRES_PASSWORD
           value: "sakila"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

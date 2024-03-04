@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: hello-server
+  name: hello-server
+  namespace: hello
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hello-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hello-server
+    spec:
+      containers:
+      - image: public.ecr.aws/m9h2b5e7/hello-app:080124
+        name: hello-server
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

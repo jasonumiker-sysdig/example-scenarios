@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-client-blocked
+  namespace: hello
+  labels:
+    app.kubernetes.io/name: hello-client-blocked
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hello-client-blocked
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hello-client-blocked
+    spec:
+      containers:
+      - image: public.ecr.aws/m9h2b5e7/alpine:3.19.0
+        name: hello-client-blocked
+        command: ["sh", "-c"]
+        args: ["while true; do wget -qO- --timeout=2 http://hello-server.hello.svc:8080; sleep 30; done"]
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: hello-secret
+              key: API_KEY
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

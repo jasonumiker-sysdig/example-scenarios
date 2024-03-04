@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default
+  namespace: security-playground
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: security-playground
+roleRef:
+  kind: Role
+  name: default
+  apiGroup: rbac.authorization.k8s.io
