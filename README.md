@@ -8,10 +8,11 @@ I provide them here so that you can run through that workshop on your own cluste
 
 You need to have:
 * An AWS EKS Cluster
+  * With an IAM OIDC provider enabled for IRSA - https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html
 * A machine that is able to run kubectl commands against it (i.e. you've already run the `aws eks update-kubeconfig` with the right AWS IAM available to do so etc.)
 * A Sysdig Secure subscription with both the EKS Cluster and the AWS Account connected.
 
-### Connecting the EKS Cluster
+### Connecting the EKS Cluster to Sysdig
 
 This is the Sysdig Helm Chart values file we use in the workshop. I haven't moved to the cluster scanner yet because the workshop is a single-node cluster so it doesn't really matter/help there.
 ```
@@ -45,7 +46,7 @@ admissionController:
       minReplicas: 1
 ```
 
-### Connecting the AWS Account
+### Connecting the AWS Account to Sysdig
 We have connected the workshop AWS account with agentless CSPM and CDR - and assume that you'll have these enabled in your account as well:
 ![alt text](agentless-aws.png)
 
@@ -101,6 +102,11 @@ You will create two custom policies (click the Add Policy button in the upper ri
 
 ## Deploy the Kubernetes Manifests
 Ensure your kubectl is working for the intended cluster and you are in the example-scenarios folder then run the following command `kubectl apply -k k8s-manifests`
+
+## (Optional if you want to do the AWS Cloud Detection and Response steps) Set up the IRSA Role
+Edit the [create-irsa](./create-irsa.sh) script to include the cluster name and region and then run that script to create the AWS IAM Role `irsa` and a matching service-account named `irsa` that we'll assign to the security-playground giving it over-provisioned access to S3 in the workshop.
+
+NOTE: You'll need to have enabled OIDC on the cluster you are testing against by following the instructions at https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html
 
 ## Do the workshop!
 The scripts that you would expect to be on the Jumpbox are all in the scripts folder.
