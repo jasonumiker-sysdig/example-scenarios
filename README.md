@@ -4,7 +4,7 @@ These are the Kubernetes manifests and scripts from the Sysdig EKS Workshop - ht
 
 I provide them here so that you can run through that workshop on your own cluster/environment (independent of Sysdig).
 
-## Prerequisites
+## Prerequisites (Optional if you want to do the AWS Cloud Detection and Response steps - otherwise any Kubernetes is fine)
 
 You need to have:
 * An AWS EKS Cluster
@@ -46,7 +46,7 @@ admissionController:
       minReplicas: 1
 ```
 
-### Connecting the AWS Account to Sysdig
+### (Optional if you want to do the AWS Cloud Detection and Response steps) Connecting the AWS Account to Sysdig
 We have connected the workshop AWS account with agentless CSPM and CDR - and assume that you'll have these enabled in your account as well:
 ![alt text](agentless-aws.png)
 
