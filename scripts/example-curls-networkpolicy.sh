@@ -6,4 +6,5 @@ NODE_PORT=30000
 HELLO_NAMESPACE=hello
 
 echo "Trying to reach hello-server from security-playground"
+echo "---"
 curl -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=curl http://hello-server.$HELLO_NAMESPACE.svc:8080"
