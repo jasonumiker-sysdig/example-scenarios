@@ -15,7 +15,7 @@ spec:
         app.kubernetes.io/name: hello-client-blocked
     spec:
       containers:
-      - image: public.ecr.aws/m9h2b5e7/alpine:3.19.0
+      - image: public.ecr.aws/m9h2b5e7/alpine:3.19.1
         name: hello-client-blocked
         command: ["sh", "-c"]
         args: ["while true; do wget -qO- --timeout=2 http://hello-server.hello.svc:8080; sleep 30; done"]
