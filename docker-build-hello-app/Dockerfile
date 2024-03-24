@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.21.5-bookworm as builder
+FROM golang:1.22.1-bookworm as builder
 WORKDIR /app
 RUN go mod init hello-app
 COPY *.go ./

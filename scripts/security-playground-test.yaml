@@ -18,7 +18,7 @@ spec:
       hostPID: true
       containers:
         - name: security-playground
-          image: public.ecr.aws/m9h2b5e7/security-playground:070124
+          image: public.ecr.aws/m9h2b5e7/security-playground:240324
           ports:
             - name: http
               containerPort: 8080

