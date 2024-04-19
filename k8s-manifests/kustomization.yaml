@@ -1,25 +1,30 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - 01-security-playground-namespace.yaml
-  - 02-security-playground-role.yaml
-  - 03-security-playground-rolebinding.yaml
-  - 04-security-playground-deployment.yaml
-  - 05-security-playground-service.yaml
-  - 06-security-playground-restricted-namespace.yaml
-  - 07-security-playground-restricted-deployment.yaml
-  - 08-security-playground-restricted-service.yaml
-  - 09-security-playground-restricted-nodrift-namespace.yaml
-  - 10-security-playground-restricted-nodrift-deployment.yaml
-  - 11-security-playground-restricted-nodrift-service.yaml
-  - 12-hello-namespace.yaml
-  - 13-hello-server-deployment.yaml
-  - 14-hello-server-service.yaml
-  - 15-hello-secret.yaml
-  - 16-hello-client-deployment.yaml
-  - 17-hello-client-blocked-deployment.yaml
-  - 18-postgres-sakila-namespace.yaml
-  - 19-postgres-sakila-deployment.yaml
-  - 20-security-playground-restricted-nomalware-namespace.yaml
-  - 21-security-playground-restricted-nomalware-deployment.yaml
-  - 22-security-playground-restricted-nomalware-service.yaml
+- 01-security-playground-namespace.yaml
+- 02-security-playground-role.yaml
+- 03-security-playground-rolebinding.yaml
+- 04-security-playground-deployment.yaml
+- 05-security-playground-service.yaml
+- 06-security-playground-restricted-namespace.yaml
+- 07-security-playground-restricted-deployment.yaml
+- 08-security-playground-restricted-service.yaml
+- 09-security-playground-restricted-nodrift-namespace.yaml
+- 10-security-playground-restricted-nodrift-deployment.yaml
+- 11-security-playground-restricted-nodrift-service.yaml
+- 12-hello-namespace.yaml
+- 13-hello-server-deployment.yaml
+- 14-hello-server-service.yaml
+- 15-hello-secret.yaml
+- 16-hello-client-deployment.yaml
+- 17-hello-client-blocked-deployment.yaml
+- 18-postgres-sakila-namespace.yaml
+- 19-postgres-sakila-deployment.yaml
+- 20-security-playground-restricted-nomalware-namespace.yaml
+- 21-security-playground-restricted-nomalware-deployment.yaml
+- 22-security-playground-restricted-nomalware-service.yaml
+patches:
+- path: ./patches/1713499685_remediate_SecurityContext_privileged_for_workload_security-playground.yaml
+  target:
+    kind: Deployment
+    namespace: security-playground
