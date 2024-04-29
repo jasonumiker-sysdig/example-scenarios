@@ -11,8 +11,8 @@
 kubectl apply -f ./generated-network-policy.yml
 sleep 10
 ./example-curls-networkpolicy.sh
-kubectl logs deployment/hello-client-blocked -n hello
-kubectl logs deployment/hello-client -n hello
+kubectl logs --since=5m deployment/hello-client-blocked -n hello
+kubectl logs --since=5m deployment/hello-client -n hello
 kubectl apply -f ./generated-network-policy2.yml
 sleep 10
 ./example-curls.sh
