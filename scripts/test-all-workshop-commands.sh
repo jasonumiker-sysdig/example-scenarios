@@ -6,7 +6,7 @@
 #kubectl apply -f ./security-playground-irsa.yaml
 #sleep 10
 #./example-curls-bucket-public.sh
-./sysdig-cli-scanner -a app.au1.sysdig.com logstash:7.16.1
+#./sysdig-cli-scanner -a app.au1.sysdig.com logstash:7.16.1
 ./example-curls-networkpolicy.sh
 kubectl apply -f ./generated-network-policy.yml
 sleep 10
