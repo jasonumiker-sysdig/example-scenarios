@@ -10,6 +10,7 @@
 #./example-curls-bucket-public.sh
 #export SECURE_API_TOKEN=token
 #./sysdig-cli-scanner -a app.au1.sysdig.com logstash:7.16.1
+#./sysdig-cli-scanner -a app.au1.sysdig.com --iac example-scenarios/k8s-manifests/04-security-playground-deployment.yaml
 ./example-curls-networkpolicy.sh
 kubectl apply -f ./generated-network-policy.yml
 sleep 10
