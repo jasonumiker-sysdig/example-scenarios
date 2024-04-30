@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: security-playground
+  namespace: security-playground
+  labels:
+    app.kubernetes.io/name: security-playground
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: security-playground
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: security-playground
+    spec:
+      hostPID: true
+      containers:
+        - name: security-playground
+          image: public.ecr.aws/m9h2b5e7/security-playground:240324
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+          - name: AWS_ACCESS_KEY_ID
+            value: ""
+          - name: AWS_SECRET_ACCESS_KEY
+            value: ""
+          - name: AWS_DEFAULT_REGION
+            value: "ap-southeast-2"

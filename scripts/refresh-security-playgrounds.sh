@@ -6,3 +6,4 @@ kubectl delete --all pods --namespace=security-playground-restricted-nodrift
 kubectl delete --all pods --namespace=security-playground-restricted-nomalware
 kubectl delete -f ./generated-network-policy.yml
 kubectl delete -f ./generated-network-policy2.yml
+kubectl apply -f ../k8s-manifests/04-security-playground-deployment.yaml

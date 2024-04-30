@@ -4,8 +4,11 @@
 ./example-curls-restricted-nodrift.sh
 ./example-curls-restricted-nomalware.sh
 #kubectl apply -f ./security-playground-irsa.yaml
+#kubectl apply -f ./security-playground-aws-env-vars.yaml
 #sleep 10
+#export S3_BUCKET_NAME=bucket
 #./example-curls-bucket-public.sh
+#export SECURE_API_TOKEN=token
 #./sysdig-cli-scanner -a app.au1.sysdig.com logstash:7.16.1
 ./example-curls-networkpolicy.sh
 kubectl apply -f ./generated-network-policy.yml
