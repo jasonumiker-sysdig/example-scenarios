@@ -38,4 +38,10 @@ resource "aws_s3_bucket_acl" "lwihkiak" {
 
   bucket = aws_s3_bucket.lwihkiak.id
   acl    = "public-read"
+  } resource "aws_s3_bucket_public_access_block" "lwihkiak" {
+  block_public_policy     = true
+  bucket                  = aws_s3_bucket.lwihkiak.id
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  block_public_acls       = true
 }
